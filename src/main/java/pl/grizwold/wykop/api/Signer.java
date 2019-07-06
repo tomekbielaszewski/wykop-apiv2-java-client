@@ -13,8 +13,9 @@ import java.security.MessageDigest;
 public class Signer {
     private static final char[] LOWERCASE_DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
-    private final ApiKey key;
     private final MessageDigest md5;
+
+    private ApiKey key;
 
     @SneakyThrows
     public Signer(ApiKey key) {
@@ -37,6 +38,11 @@ public class Signer {
         String signature = getSignature(uri, payload);
         request.addHeader("apisign", signature);
         return request;
+    }
+
+    public Signer login(String userkey) {
+        this.key = this.key.withUserKey(userkey);
+        return this;
     }
 
     private <T extends HttpRequestBase> void prepareUri(T request) {
