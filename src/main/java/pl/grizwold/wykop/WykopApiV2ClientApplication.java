@@ -25,7 +25,8 @@ public class WykopApiV2ClientApplication {
                 .addPostParam("accountkey", "KkO9fA3o2uRviR4CVfVn")
                 .addParam("appkey", "kUhKLnGypc");
 
-        signer.sign(wykopRequest);
+        String signature = signer.getSignature(wykopRequest.getUrl(), wykopRequest.getPayloadValues());
+        wykopRequest.sign(signature);
 
         CloseableHttpResponse closeableHttpResponse = client.execute(wykopRequest.toRequest());
         System.out.println(closeableHttpResponse.getStatusLine().toString());

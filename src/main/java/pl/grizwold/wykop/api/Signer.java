@@ -1,9 +1,7 @@
 package pl.grizwold.wykop.api;
 
 import lombok.SneakyThrows;
-import org.apache.http.client.methods.HttpUriRequest;
 import pl.grizwold.wykop.model.ApiKey;
-import pl.grizwold.wykop.model.WykopRequest;
 
 import java.security.MessageDigest;
 
@@ -19,15 +17,7 @@ public class Signer {
         this.md5 = MessageDigest.getInstance("MD5");
     }
 
-    public HttpUriRequest sign(WykopRequest request) {
-        String uri = request.getUrl();
-        String payload = request.getPayloadValues();
-        String signature = getSignature(uri, payload);
-        request.sign(signature);
-        return request.toRequest();
-    }
-
-    private String getSignature(String uri, String payload) {
+    public String getSignature(String uri, String payload) {
         String toSign = key.getPrv() + uri + payload;
         byte[] signedBytes = md5.digest(toSign.getBytes());
         return toString(signedBytes);
