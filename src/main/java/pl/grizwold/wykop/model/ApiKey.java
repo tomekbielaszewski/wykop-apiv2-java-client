@@ -11,6 +11,8 @@ public class ApiKey {
     private String prv;
     @Setter
     private String userKey;
+    @Setter
+    private String accountKey;
 
     public ApiKey(String pub, String prv) {
         this.prv = prv;
