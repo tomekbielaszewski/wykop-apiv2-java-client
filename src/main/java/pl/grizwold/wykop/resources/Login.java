@@ -2,6 +2,7 @@ package pl.grizwold.wykop.resources;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 import pl.grizwold.wykop.WykopClient;
 import pl.grizwold.wykop.model.WykopRequest;
@@ -13,7 +14,7 @@ public class Login extends WykopResource {
     private static final String DATA_NODE = "data";
     private final String accountKey;
 
-    public Login(WykopClient client, String accountKey) {
+    public Login(@NonNull WykopClient client, @NonNull String accountKey) {
         super(client);
         this.accountKey = accountKey;
     }

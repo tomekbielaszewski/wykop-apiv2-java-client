@@ -1,5 +1,6 @@
 package pl.grizwold.wykop.resources.entries;
 
+import lombok.NonNull;
 import pl.grizwold.wykop.WykopClient;
 import pl.grizwold.wykop.model.WykopRequest;
 import pl.grizwold.wykop.model.WykopResponse;
@@ -9,7 +10,7 @@ public class EntriesHot extends WykopResource {
     private static final String PAGE = "page";
     private static final String PERIOD = "period";
 
-    public EntriesHot(WykopClient client) {
+    public EntriesHot(@NonNull WykopClient client) {
         super(client);
     }
 

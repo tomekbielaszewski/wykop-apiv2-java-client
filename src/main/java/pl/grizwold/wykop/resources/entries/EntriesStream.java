@@ -1,5 +1,6 @@
 package pl.grizwold.wykop.resources.entries;
 
+import lombok.NonNull;
 import pl.grizwold.wykop.WykopClient;
 import pl.grizwold.wykop.model.WykopRequest;
 import pl.grizwold.wykop.model.WykopResponse;
@@ -9,7 +10,7 @@ public class EntriesStream extends WykopResource {
     private static final String PAGE = "page";
     private static final String FIRST_ID = "firstid";
 
-    public EntriesStream(WykopClient client) {
+    public EntriesStream(@NonNull WykopClient client) {
         super(client);
     }
 
