@@ -29,6 +29,7 @@ public class WykopClient implements Closeable {
     private final ApiKey apiKey;
     private final Signer signer;
     private final Set<ApiParam> apiParams;
+    private boolean throwOnApiError = true;
 
     public WykopClient(@NonNull String pub, @NonNull String priv, @NonNull CloseableHttpClient httpClient) {
         this.apiKey = new ApiKey(pub, priv);
@@ -81,11 +82,15 @@ public class WykopClient implements Closeable {
         return this;
     }
 
+    public void setThrowOnApiError(boolean throwOnApiError) {
+        this.throwOnApiError = throwOnApiError;
+    }
+
     private void setParams(WykopRequest request) {
-        this.apiParams.forEach(param -> request.addParamIfAbsent(param.key, param.value));
-        request.addParamIfAbsent(APPKEY, this.apiKey.getPub());
+        this.apiParams.forEach(param -> request.addApiParamIfAbsent(param.key, param.value));
+        request.addApiParamIfAbsent(APPKEY, this.apiKey.getPub());
         Optional.ofNullable(this.apiKey.getUserKey())
-                .ifPresent(userkey -> request.addParamIfAbsent(USERKEY, userkey));
+                .ifPresent(userkey -> request.addApiParamIfAbsent(USERKEY, userkey));
     }
 
     @SneakyThrows
@@ -99,6 +104,7 @@ public class WykopClient implements Closeable {
             int code = errorNode.get("code").asInt();
             String message_pl = errorNode.get("message_pl").asText();
             error = new WykopResponse.Error(code, message_pl);
+            if (throwOnApiError) throw error;
         }
         return new WykopResponse(json, error);
     }
