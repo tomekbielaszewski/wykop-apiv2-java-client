@@ -3,6 +3,7 @@ package pl.grizwold.wykop;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.TextNode;
+import org.junit.Test;
 import pl.grizwold.wykop.model.ApiParam;
 import pl.grizwold.wykop.model.WykopRequest;
 import pl.grizwold.wykop.model.WykopResponse;
@@ -24,16 +25,13 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
-public class WykopApiV2ClientApplication {
+public class UsageExamples {
     private static String PUB = "aNd401dAPp";
     private static String PRV = "3lWf1lCxD6";
-    private static String ACCOUNT = "KkO9fA3o2uRviR4CVfVn";
+    private static String ACCOUNT = "3lWf1lCxD63lWf1lCxD6";
 
-    public static void main(String[] args) throws Exception {
-        entriesObserved();
-    }
-
-    public static void definingGlobalParams() {
+    @Test
+    public void definingGlobalParams() {
         WykopRequest wykopRequest = new WykopRequest("https://a2.wykop.pl/Entries/Entry/42463679/");
 
         WykopClient wykopClient = new WykopClient(PUB, PRV);
@@ -43,7 +41,8 @@ public class WykopApiV2ClientApplication {
         System.out.println(wykopResponse.toString());
     }
 
-    public static void callingPostEndpoint() {
+    @Test
+    public void callingPostEndpoint() {
         WykopRequest wykopRequest = new WykopRequest("https://a2.wykop.pl/Login/Index/")
                 .addPostParam("accountkey", ACCOUNT);
 
@@ -54,13 +53,15 @@ public class WykopApiV2ClientApplication {
         System.out.println(wykopResponse.toString());
     }
 
-    public static void loggingIn() {
+    @Test
+    public void loggingIn() {
         WykopClient client = new WykopClient(PUB, PRV);
         WykopResponse response = new Login(client, ACCOUNT).call();
         //after this call all subsequent requests will be automatically authorized by this client instance
     }
 
-    public static void loggingIn_modifyingRequestBeforeCall() {
+    @Test
+    public void loggingIn_modifyingRequestBeforeCall() {
         WykopClient client = new WykopClient(PUB, PRV);
         WykopRequest request = new Login(client, ACCOUNT).toRequest();
         request.addParam("data", "full");
@@ -69,31 +70,36 @@ public class WykopApiV2ClientApplication {
         //In this example you need to extract userkey from response by yourself and then set it in the client instance
     }
 
-    public static void entriesStream() {
+    @Test
+    public void entriesStream() {
         WykopClient client = new WykopClient(PUB, PRV);
         WykopResponse response = new EntriesStream(client).call("1", "42485191");
         System.out.println(response);
     }
 
-    public static void entriesHot() {
+    @Test
+    public void entriesHot() {
         WykopClient client = new WykopClient(PUB, PRV);
         WykopResponse response = new EntriesHot(client).call("1", "24");
         System.out.println(response);
     }
 
-    public static void entriesActive() {
+    @Test
+    public void entriesActive() {
         WykopClient client = new WykopClient(PUB, PRV);
         WykopResponse response = new EntriesActive(client).call("1");
         System.out.println(response);
     }
 
-    public static void entriesObserved() {
+    @Test
+    public void entriesObserved() {
         WykopClient client = new WykopClient(PUB, PRV);
         WykopResponse response = new EntriesObserved(client).call("1");
         System.out.println(response);
     }
 
-    public static void massiveEntriesStream() throws ExecutionException, InterruptedException {
+    @Test
+    public void massiveEntriesStream() throws ExecutionException, InterruptedException {
         WykopClient client = new WykopClient(PUB, PRV);
         EntriesStream entriesStream = new EntriesStream(client);
         ObjectMapper om = new ObjectMapper();
