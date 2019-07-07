@@ -75,14 +75,7 @@ public class WykopApiV2ClientApplication {
                     .parallel()
                     .mapToObj(entriesStream::call)
                     .map(WykopResponse::getJson)
-                    .map(json -> {
-                        try {
-                            return om.readTree(json);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        return new TextNode("0");
-                    })
+                    .map(json -> readJsonTree(json, om))
                     .map(node -> node.get("data"))
                     .map(JsonNode::iterator)
                     .map(iterator -> Spliterators.spliteratorUnknownSize(iterator, Spliterator.CONCURRENT))
@@ -107,5 +100,14 @@ public class WykopApiV2ClientApplication {
         WykopClient client = new WykopClient(PUB, PRV);
         WykopResponse response = new EntriesHot(client).call("1", "24");
         System.out.println(response);
+    }
+
+    private static JsonNode readJsonTree(String json, ObjectMapper om) {
+        try {
+            return om.readTree(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new TextNode("IOException");
     }
 }
