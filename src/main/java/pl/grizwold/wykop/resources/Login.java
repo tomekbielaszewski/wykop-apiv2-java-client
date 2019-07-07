@@ -2,11 +2,10 @@ package pl.grizwold.wykop.resources;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import pl.grizwold.wykop.WykopClient;
 import pl.grizwold.wykop.model.WykopRequest;
 import pl.grizwold.wykop.model.WykopResponse;
-
-import java.io.IOException;
 
 public class Login extends WykopResource {
     private static final String ACCOUNT_KEY = "accountkey";
@@ -19,7 +18,7 @@ public class Login extends WykopResource {
         this.accountKey = accountKey;
     }
 
-    public WykopResponse call() throws IOException {
+    public WykopResponse call() {
         WykopRequest request = this.toRequest();
 
         WykopResponse response = this.client.execute(request);
@@ -34,7 +33,8 @@ public class Login extends WykopResource {
                 .addPostParam(ACCOUNT_KEY, this.accountKey);
     }
 
-    private void saveLogonInformation(WykopResponse wykopResponse) throws IOException {
+    @SneakyThrows
+    private void saveLogonInformation(WykopResponse wykopResponse) {
         if (wykopResponse.getError() == null) {
             ObjectMapper om = new ObjectMapper();
             JsonNode jsonNode = om.readTree(wykopResponse.getJson());

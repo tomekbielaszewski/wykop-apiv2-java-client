@@ -3,6 +3,7 @@ package pl.grizwold.wykop;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
+import lombok.SneakyThrows;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -49,7 +50,8 @@ public class WykopClient implements Closeable {
         this(pub, priv, accountKey, HttpClients.createDefault());
     }
 
-    public WykopResponse execute(@NonNull WykopRequest request) throws IOException {
+    @SneakyThrows
+    public WykopResponse execute(@NonNull WykopRequest request) {
         setParams(request);
 
         String signature = signer.getSignature(request.getUrl(), request.getPayloadValues());
@@ -86,7 +88,8 @@ public class WykopClient implements Closeable {
                 .ifPresent(userkey -> request.addParamIfAbsent(USERKEY, userkey));
     }
 
-    private WykopResponse toWykopResponse(CloseableHttpResponse content) throws IOException {
+    @SneakyThrows
+    private WykopResponse toWykopResponse(CloseableHttpResponse content) {
         String json = EntityUtils.toString(content.getEntity());
         JsonNode jsonNode = om.readTree(json);
 

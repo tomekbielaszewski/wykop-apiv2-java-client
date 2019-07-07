@@ -15,7 +15,7 @@ public class EntriesHot extends WykopResource {
         super(client);
     }
 
-    public WykopResponse call(String page, String period) throws IOException {
+    public WykopResponse call(String page, String period) {
         WykopRequest request = this.toRequest()
                 .addParam(PAGE, page)
                 .addParam(PERIOD, period);

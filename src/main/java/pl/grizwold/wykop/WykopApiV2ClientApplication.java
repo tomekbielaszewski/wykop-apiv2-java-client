@@ -31,7 +31,7 @@ public class WykopApiV2ClientApplication {
         massiveEntriesStream();
     }
 
-    public static void definingGlobalParams() throws IOException {
+    public static void definingGlobalParams() {
         WykopRequest wykopRequest = new WykopRequest("https://a2.wykop.pl/Entries/Entry/42463679/");
 
         WykopClient wykopClient = new WykopClient(PUB, PRV);
@@ -41,7 +41,7 @@ public class WykopApiV2ClientApplication {
         System.out.println(wykopResponse.toString());
     }
 
-    public static void callingPostEndpoint() throws IOException {
+    public static void callingPostEndpoint() {
         WykopRequest wykopRequest = new WykopRequest("https://a2.wykop.pl/Login/Index/")
                 .addPostParam("accountkey", ACCOUNT);
 
@@ -52,12 +52,12 @@ public class WykopApiV2ClientApplication {
         System.out.println(wykopResponse.toString());
     }
 
-    public static void loggingIn() throws IOException {
+    public static void loggingIn() {
         WykopClient client = new WykopClient(PUB, PRV);
         WykopResponse response = new Login(client, ACCOUNT).call();
     }
 
-    public static void loggingIn_modifyingRequestBeforeCall() throws IOException {
+    public static void loggingIn_modifyingRequestBeforeCall() {
         WykopClient client = new WykopClient(PUB, PRV);
         WykopRequest request = new Login(client, ACCOUNT).toRequest();
         request.addParam("data", "full");
@@ -65,7 +65,7 @@ public class WykopApiV2ClientApplication {
         System.out.println(response);
     }
 
-    public static void massiveEntriesStream() throws IOException, ExecutionException, InterruptedException {
+    public static void massiveEntriesStream() throws ExecutionException, InterruptedException {
         WykopClient client = new WykopClient(PUB, PRV);
         EntriesStream entriesStream = new EntriesStream(client);
         ObjectMapper om = new ObjectMapper();
@@ -73,14 +73,7 @@ public class WykopApiV2ClientApplication {
         forkJoinPool.submit(() -> {
             List<Object> ids = IntStream.rangeClosed(1, 1000)
                     .parallel()
-                    .mapToObj(i -> {
-                        try {
-                            return entriesStream.call(String.valueOf(i));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        return new WykopResponse("", new WykopResponse.Error(500, "IOException"));
-                    })
+                    .mapToObj(i -> entriesStream.call(String.valueOf(i)))
                     .map(WykopResponse::getJson)
                     .map(json -> {
                         try {
@@ -104,13 +97,13 @@ public class WykopApiV2ClientApplication {
         }).get();
     }
 
-    public static void entriesStream() throws IOException {
+    public static void entriesStream() {
         WykopClient client = new WykopClient(PUB, PRV);
         WykopResponse response = new EntriesStream(client).call("1", "42485191");
         System.out.println(response);
     }
 
-    public static void entriesHot() throws IOException {
+    public static void entriesHot() {
         WykopClient client = new WykopClient(PUB, PRV);
         WykopResponse response = new EntriesHot(client).call("1", "24");
         System.out.println(response);

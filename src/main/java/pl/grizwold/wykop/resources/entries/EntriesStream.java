@@ -15,14 +15,14 @@ public class EntriesStream extends WykopResource {
         super(client);
     }
 
-    public WykopResponse call(String page) throws IOException {
+    public WykopResponse call(String page) {
         WykopRequest request = this.toRequest()
                 .addParam(PAGE, page);
 
         return this.client.execute(request);
     }
 
-    public WykopResponse call(String page, String firstId) throws IOException {
+    public WykopResponse call(String page, String firstId) {
         WykopRequest request = this.toRequest()
                 .addParam(PAGE, page)
                 .addParam(FIRST_ID, firstId);
