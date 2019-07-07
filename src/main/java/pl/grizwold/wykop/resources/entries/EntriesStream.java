@@ -5,8 +5,6 @@ import pl.grizwold.wykop.model.WykopRequest;
 import pl.grizwold.wykop.model.WykopResponse;
 import pl.grizwold.wykop.resources.WykopResource;
 
-import java.io.IOException;
-
 public class EntriesStream extends WykopResource {
     private static final String PAGE = "page";
     private static final String FIRST_ID = "firstid";
@@ -25,15 +23,15 @@ public class EntriesStream extends WykopResource {
 
     public WykopResponse call(String page) {
         WykopRequest request = this.toRequest()
-                .addParam(PAGE, page);
+                .addNamedParam(PAGE, page);
 
         return this.client.execute(request);
     }
 
     public WykopResponse call(String page, String firstId) {
         WykopRequest request = this.toRequest()
-                .addParam(PAGE, page)
-                .addParam(FIRST_ID, firstId);
+                .addNamedParam(PAGE, page)
+                .addNamedParam(FIRST_ID, firstId);
 
         return this.client.execute(request);
     }

@@ -18,7 +18,7 @@ public class EntriesActive extends WykopResource {
 
     public WykopResponse call(String page) {
         WykopRequest request = this.toRequest()
-                .addParam(PAGE, page);
+                .addNamedParam(PAGE, page);
 
         return this.client.execute(request);
     }

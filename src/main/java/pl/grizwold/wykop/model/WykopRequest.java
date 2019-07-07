@@ -15,8 +15,9 @@ import java.util.stream.Collectors;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class WykopRequest {
-    private final Map<String, String> params = new HashMap<>();
+    private final Map<String, String> namedParams = new HashMap<>();
     private final List<NameValuePair> postParams = new ArrayList<>();
+    private final List<String> apiParams = new ArrayList<>();
 
     private String url;
     private String signature;
@@ -30,13 +31,18 @@ public class WykopRequest {
         return this;
     }
 
-    public WykopRequest addParam(@NonNull String key, @NonNull String value) {
-        params.put(key, value);
+    public WykopRequest addApiParam(@NonNull String value) {
+        apiParams.add(value);
         return this;
     }
 
-    public WykopRequest addParamIfAbsent(String key, String value) {
-        params.putIfAbsent(key, value);
+    public WykopRequest addNamedParam(@NonNull String key, @NonNull String value) {
+        namedParams.put(key, value);
+        return this;
+    }
+
+    public WykopRequest addApiParamIfAbsent(String key, String value) {
+        namedParams.putIfAbsent(key, value);
         return this;
     }
 
@@ -54,7 +60,7 @@ public class WykopRequest {
     }
 
     public String getUrl() {
-        return url + paramsToUrl();
+        return url + urlParamsToUrl() + paramsToUrl();
     }
 
     public void sign(String signature) {
@@ -74,8 +80,13 @@ public class WykopRequest {
     }
 
     private String paramsToUrl() {
-        return params.entrySet().stream()
+        return namedParams.entrySet().stream()
                 .map(pair -> pair.getKey() + "/" + pair.getValue())
                 .collect(Collectors.joining("/"));
+    }
+
+    private String urlParamsToUrl() {
+        String joined = String.join("/", apiParams);
+        return joined.length() > 0 ? joined + "/" : "";
     }
 }

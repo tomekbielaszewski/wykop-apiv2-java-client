@@ -5,8 +5,6 @@ import pl.grizwold.wykop.model.WykopRequest;
 import pl.grizwold.wykop.model.WykopResponse;
 import pl.grizwold.wykop.resources.WykopResource;
 
-import java.io.IOException;
-
 public class EntriesHot extends WykopResource {
     private static final String PAGE = "page";
     private static final String PERIOD = "period";
@@ -21,8 +19,8 @@ public class EntriesHot extends WykopResource {
 
     public WykopResponse call(String page, String period) {
         WykopRequest request = this.toRequest()
-                .addParam(PAGE, page)
-                .addParam(PERIOD, period);
+                .addNamedParam(PAGE, page)
+                .addNamedParam(PERIOD, period);
 
         return this.client.execute(request);
     }
