@@ -17,6 +17,8 @@ public class EntriesObserved extends WykopResource {
     }
 
     public WykopResponse call(String page) {
+        checkAuthorization();
+
         WykopRequest request = this.toRequest()
                 .addNamedParam(PAGE, page);
 

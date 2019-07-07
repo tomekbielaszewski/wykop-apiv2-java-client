@@ -14,6 +14,12 @@ public abstract class WykopResource {
 
     public abstract WykopRequest toRequest();
 
+    protected void checkAuthorization() {
+        if(!this.client.isLoggedIn()) {
+            throw new IllegalStateException("Operation requires logging in!");
+        }
+    }
+
     public static void setBaseUrl(String baseUrl) {
         WykopResource.baseUrl = baseUrl;
     }

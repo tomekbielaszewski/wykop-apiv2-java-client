@@ -77,6 +77,10 @@ public class WykopClient implements Closeable {
         return this;
     }
 
+    public boolean isLoggedIn() {
+        return this.apiKey.getUserKey() != null;
+    }
+
     public WykopClient logout() {
         this.apiKey.setUserKey(null);
         return this;
