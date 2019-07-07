@@ -12,8 +12,8 @@ public class EntryGet extends WykopResource {
         super(client);
     }
 
-    public WykopResponse call(int page) {
-        return this.call(String.valueOf(page));
+    public WykopResponse call(int id) {
+        return this.call(String.valueOf(id));
     }
 
     public WykopResponse call(String id) {
