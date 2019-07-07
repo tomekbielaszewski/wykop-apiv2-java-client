@@ -23,13 +23,18 @@ public class Login extends WykopResource implements Callable<WykopResponse> {
 
     @Override
     public WykopResponse call() throws IOException {
-        WykopRequest request = new WykopRequest(baseUrl + "/Login/Index/")
-                .addPostParam(ACCOUNT_KEY, this.accountKey);
+        WykopRequest request = this.toRequest();
 
         WykopResponse response = this.client.execute(request);
         saveLogonInformation(response);
 
         return response;
+    }
+
+    @Override
+    public WykopRequest toRequest() {
+        return new WykopRequest(baseUrl + "/Login/Index/")
+                .addPostParam(ACCOUNT_KEY, this.accountKey);
     }
 
     private void saveLogonInformation(WykopResponse wykopResponse) throws IOException {

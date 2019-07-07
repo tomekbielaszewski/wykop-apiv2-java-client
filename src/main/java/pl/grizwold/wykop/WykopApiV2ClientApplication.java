@@ -13,7 +13,7 @@ public class WykopApiV2ClientApplication {
     private static String ACCOUNT = "KkO9fA3o2uRviR4CVfVn";
 
     public static void main(String[] args) throws IOException {
-        loggingIn();
+        loggingIn_modifyingRequestBeforeCall();
     }
 
     public static void definingGlobalParams() throws IOException {
@@ -40,5 +40,13 @@ public class WykopApiV2ClientApplication {
     public static void loggingIn() throws IOException {
         WykopClient client = new WykopClient(PUB, PRV);
         WykopResponse response = new Login(client, ACCOUNT).call();
+    }
+
+    public static void loggingIn_modifyingRequestBeforeCall() throws IOException {
+        WykopClient client = new WykopClient(PUB, PRV);
+        WykopRequest request = new Login(client, ACCOUNT).toRequest();
+        request.addParam("data", "full");
+        WykopResponse response = client.execute(request);
+        System.out.println(response);
     }
 }
