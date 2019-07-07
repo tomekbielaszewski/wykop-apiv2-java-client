@@ -4,6 +4,7 @@ import pl.grizwold.wykop.model.ApiParam;
 import pl.grizwold.wykop.model.WykopRequest;
 import pl.grizwold.wykop.model.WykopResponse;
 import pl.grizwold.wykop.resources.Login;
+import pl.grizwold.wykop.resources.entries.EntriesStream;
 
 import java.io.IOException;
 
@@ -13,7 +14,7 @@ public class WykopApiV2ClientApplication {
     private static String ACCOUNT = "KkO9fA3o2uRviR4CVfVn";
 
     public static void main(String[] args) throws IOException {
-        loggingIn_modifyingRequestBeforeCall();
+        entriesStream();
     }
 
     public static void definingGlobalParams() throws IOException {
@@ -47,6 +48,12 @@ public class WykopApiV2ClientApplication {
         WykopRequest request = new Login(client, ACCOUNT).toRequest();
         request.addParam("data", "full");
         WykopResponse response = client.execute(request);
+        System.out.println(response);
+    }
+
+    public static void entriesStream() throws IOException {
+        WykopClient client = new WykopClient(PUB, PRV);
+        WykopResponse response = new EntriesStream(client).call("10", "42486263");
         System.out.println(response);
     }
 }
