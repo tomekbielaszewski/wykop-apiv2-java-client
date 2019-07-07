@@ -12,6 +12,7 @@ import java.util.concurrent.Callable;
 public class Login extends WykopResource implements Callable<WykopResponse> {
     private static final String ACCOUNT_KEY = "accountkey";
     private static final String USER_KEY = "userkey";
+    private static final String DATA_NODE = "data";
     private final WykopClient client;
     private final String accountKey;
 
@@ -36,9 +37,9 @@ public class Login extends WykopResource implements Callable<WykopResponse> {
             ObjectMapper om = new ObjectMapper();
             JsonNode jsonNode = om.readTree(wykopResponse.getJson());
 
-            if (jsonNode.has(USER_KEY)) {
-                JsonNode userkeyNode = jsonNode.get(USER_KEY);
-                String userkey = userkeyNode.asText();
+            if (jsonNode.has(DATA_NODE)) {
+                JsonNode dataNode = jsonNode.get(DATA_NODE);
+                String userkey = dataNode.get(USER_KEY).asText();
                 this.client.login(userkey);
             }
         }
