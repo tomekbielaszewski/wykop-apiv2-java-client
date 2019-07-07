@@ -1,17 +1,18 @@
 package pl.grizwold.wykop.model;
 
-import lombok.Value;
-import lombok.experimental.NonFinal;
-import lombok.experimental.Wither;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
-@Value
+@Getter
+@EqualsAndHashCode
 public class ApiKey {
-    private String prv;
     private String pub;
-    @Wither @NonFinal
+    private String prv;
+    @Setter
     private String userKey;
 
-    public ApiKey(String prv, String pub) {
+    public ApiKey(String pub, String prv) {
         this.prv = prv;
         this.pub = pub;
     }
