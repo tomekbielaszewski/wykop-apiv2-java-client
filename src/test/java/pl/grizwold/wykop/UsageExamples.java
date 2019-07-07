@@ -9,10 +9,7 @@ import pl.grizwold.wykop.model.ApiParam;
 import pl.grizwold.wykop.model.WykopRequest;
 import pl.grizwold.wykop.model.WykopResponse;
 import pl.grizwold.wykop.resources.Login;
-import pl.grizwold.wykop.resources.entries.EntriesActive;
-import pl.grizwold.wykop.resources.entries.EntriesHot;
-import pl.grizwold.wykop.resources.entries.EntriesObserved;
-import pl.grizwold.wykop.resources.entries.EntriesStream;
+import pl.grizwold.wykop.resources.entries.*;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -97,6 +94,13 @@ public class UsageExamples {
         WykopClient client = new WykopClient(PUB, PRV);
         new Login(client, ACCOUNT).call();
         WykopResponse response = new EntriesObserved(client).call("1");
+        System.out.println(response);
+    }
+
+    @Test
+    public void entryById() {
+        WykopClient client = new WykopClient(PUB, PRV);
+        WykopResponse response = new EntryGet(client).call("42485191");
         System.out.println(response);
     }
 
