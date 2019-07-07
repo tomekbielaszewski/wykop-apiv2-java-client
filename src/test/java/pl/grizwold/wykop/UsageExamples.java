@@ -3,6 +3,7 @@ package pl.grizwold.wykop;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.TextNode;
+import org.junit.Ignore;
 import org.junit.Test;
 import pl.grizwold.wykop.model.ApiParam;
 import pl.grizwold.wykop.model.WykopRequest;
@@ -26,9 +27,9 @@ import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
 public class UsageExamples {
-    private static String PUB = "aNd401dAPp";
-    private static String PRV = "3lWf1lCxD6";
-    private static String ACCOUNT = "3lWf1lCxD63lWf1lCxD6";
+    private static String PUB = "kUhKLnGypc";
+    private static String PRV = "vbrbQmciBU";
+    private static String ACCOUNT = "KkO9fA3o2uRviR4CVfVn";
 
     @Test
     public void definingGlobalParams() {
@@ -64,7 +65,7 @@ public class UsageExamples {
     public void loggingIn_modifyingRequestBeforeCall() {
         WykopClient client = new WykopClient(PUB, PRV);
         WykopRequest request = new Login(client, ACCOUNT).toRequest();
-        request.addParam("data", "full");
+        request.addNamedParam("data", "full");
         WykopResponse response = client.execute(request);
         System.out.println(response);
         //In this example you need to extract userkey from response by yourself and then set it in the client instance
@@ -94,11 +95,21 @@ public class UsageExamples {
     @Test
     public void entriesObserved() {
         WykopClient client = new WykopClient(PUB, PRV);
+        new Login(client, ACCOUNT).call();
         WykopResponse response = new EntriesObserved(client).call("1");
         System.out.println(response);
     }
 
     @Test
+    public void notThrowingExceptionWhenApiErrorOccurs() {
+        WykopClient client = new WykopClient("123456789", "123456789");
+        client.setThrowOnApiError(false);
+        WykopResponse response = new EntriesObserved(client).call("1");
+        System.out.println(response);
+    }
+
+    @Test
+    @Ignore
     public void massiveEntriesStream() throws ExecutionException, InterruptedException {
         WykopClient client = new WykopClient(PUB, PRV);
         EntriesStream entriesStream = new EntriesStream(client);
