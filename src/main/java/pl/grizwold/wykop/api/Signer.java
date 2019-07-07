@@ -17,7 +17,7 @@ public class Signer {
         this.md5 = MessageDigest.getInstance("MD5");
     }
 
-    public String getSignature(String uri, String payload) {
+    public synchronized String getSignature(String uri, String payload) {
         String toSign = key.getPrv() + uri + payload;
         byte[] signedBytes = md5.digest(toSign.getBytes());
         return toString(signedBytes);
