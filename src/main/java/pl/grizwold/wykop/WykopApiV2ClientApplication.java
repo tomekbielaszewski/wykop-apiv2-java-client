@@ -1,20 +1,34 @@
 package pl.grizwold.wykop;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.TextNode;
 import pl.grizwold.wykop.model.ApiParam;
 import pl.grizwold.wykop.model.WykopRequest;
 import pl.grizwold.wykop.model.WykopResponse;
 import pl.grizwold.wykop.resources.Login;
+import pl.grizwold.wykop.resources.entries.EntriesHot;
 import pl.grizwold.wykop.resources.entries.EntriesStream;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.StreamSupport;
 
 public class WykopApiV2ClientApplication {
-    private static String PUB = "kUhKLnGypc";
-    private static String PRV = "vbrbQmciBU";
+    private static String PUB = "aNd401dAPp";
+    private static String PRV = "3lWf1lCxD6";
     private static String ACCOUNT = "KkO9fA3o2uRviR4CVfVn";
 
-    public static void main(String[] args) throws IOException {
-        entriesStream();
+    public static void main(String[] args) throws Exception {
+        massiveEntriesStream();
     }
 
     public static void definingGlobalParams() throws IOException {
@@ -51,9 +65,54 @@ public class WykopApiV2ClientApplication {
         System.out.println(response);
     }
 
+    public static void massiveEntriesStream() throws IOException, ExecutionException, InterruptedException {
+        WykopClient client = new WykopClient(PUB, PRV);
+        EntriesStream entriesStream = new EntriesStream(client);
+        ObjectMapper om = new ObjectMapper();
+        ForkJoinPool forkJoinPool = new ForkJoinPool(8);
+        forkJoinPool.submit(() -> {
+            List<Object> ids = IntStream.rangeClosed(1, 1000)
+                    .parallel()
+                    .mapToObj(i -> {
+                        try {
+                            return entriesStream.call(String.valueOf(i));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        return new WykopResponse("", new WykopResponse.Error(500, "IOException"));
+                    })
+                    .map(WykopResponse::getJson)
+                    .map(json -> {
+                        try {
+                            return om.readTree(json);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        return new TextNode("0");
+                    })
+                    .map(node -> node.get("data"))
+                    .map(JsonNode::iterator)
+                    .map(iterator -> Spliterators.spliteratorUnknownSize(iterator, Spliterator.CONCURRENT))
+                    .map(split -> StreamSupport.stream(split, true))
+                    .flatMap(Function.identity())
+                    .map(node -> node.get("id"))
+                    .map(JsonNode::asText)
+                    .collect(Collectors.toList());
+            System.out.println("Total entries fetched: " + ids.size());
+            HashSet<Object> objects = new HashSet<>(ids);
+            System.out.println("Unique entries fetched: " + objects.size());
+        }).get();
+    }
+
     public static void entriesStream() throws IOException {
         WykopClient client = new WykopClient(PUB, PRV);
-        WykopResponse response = new EntriesStream(client).call("10", "42486263");
+        WykopResponse response = new EntriesStream(client).call("1", "42485191");
+        System.out.println(response);
+    }
+
+    public static void entriesHot() throws IOException {
+        WykopClient client = new WykopClient(PUB, PRV);
+        WykopResponse response = new EntriesHot(client).call("1", "24");
         System.out.println(response);
     }
 }
