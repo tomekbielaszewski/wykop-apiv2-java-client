@@ -15,6 +15,10 @@ public class EntriesHot extends WykopResource {
         super(client);
     }
 
+    public WykopResponse call(int page, int period) {
+        return this.call(String.valueOf(page), String.valueOf(period));
+    }
+
     public WykopResponse call(String page, String period) {
         WykopRequest request = this.toRequest()
                 .addParam(PAGE, page)

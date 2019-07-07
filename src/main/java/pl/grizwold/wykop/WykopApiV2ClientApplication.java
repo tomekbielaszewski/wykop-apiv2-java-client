@@ -73,7 +73,7 @@ public class WykopApiV2ClientApplication {
         forkJoinPool.submit(() -> {
             List<Object> ids = IntStream.rangeClosed(1, 1000)
                     .parallel()
-                    .mapToObj(i -> entriesStream.call(String.valueOf(i)))
+                    .mapToObj(entriesStream::call)
                     .map(WykopResponse::getJson)
                     .map(json -> {
                         try {
