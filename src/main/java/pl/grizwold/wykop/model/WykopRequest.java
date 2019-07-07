@@ -69,7 +69,7 @@ public class WykopRequest {
 
     private String paramsToUrl() {
         return params.stream()
-                .map(pair -> pair.getName() + "," + pair.getValue())
-                .collect(Collectors.joining(","));
+                .map(pair -> pair.getName() + "/" + pair.getValue())
+                .collect(Collectors.joining("/"));
     }
 }
