@@ -3,18 +3,19 @@ package pl.grizwold.wykop.model;
 import lombok.NonNull;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.*;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.message.BasicNameValuePair;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class WykopRequest {
-    private final List<NameValuePair> params = new ArrayList<>();
+    private final Map<String, String> params = new HashMap<>();
     private final List<NameValuePair> postParams = new ArrayList<>();
 
     private String url;
@@ -30,7 +31,12 @@ public class WykopRequest {
     }
 
     public WykopRequest addParam(@NonNull String key, @NonNull String value) {
-        params.add(new BasicNameValuePair(key, value));
+        params.put(key, value);
+        return this;
+    }
+
+    public WykopRequest addParamIfAbsent(String key, String value) {
+        params.putIfAbsent(key, value);
         return this;
     }
 
@@ -68,8 +74,8 @@ public class WykopRequest {
     }
 
     private String paramsToUrl() {
-        return params.stream()
-                .map(pair -> pair.getName() + "/" + pair.getValue())
+        return params.entrySet().stream()
+                .map(pair -> pair.getKey() + "/" + pair.getValue())
                 .collect(Collectors.joining("/"));
     }
 }
