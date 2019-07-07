@@ -9,6 +9,7 @@ import pl.grizwold.wykop.model.WykopResponse;
 import pl.grizwold.wykop.resources.Login;
 import pl.grizwold.wykop.resources.entries.EntriesActive;
 import pl.grizwold.wykop.resources.entries.EntriesHot;
+import pl.grizwold.wykop.resources.entries.EntriesObserved;
 import pl.grizwold.wykop.resources.entries.EntriesStream;
 
 import java.io.IOException;
@@ -29,7 +30,7 @@ public class WykopApiV2ClientApplication {
     private static String ACCOUNT = "KkO9fA3o2uRviR4CVfVn";
 
     public static void main(String[] args) throws Exception {
-        entriesActive();
+        entriesObserved();
     }
 
     public static void definingGlobalParams() {
@@ -83,6 +84,12 @@ public class WykopApiV2ClientApplication {
     public static void entriesActive() {
         WykopClient client = new WykopClient(PUB, PRV);
         WykopResponse response = new EntriesActive(client).call("1");
+        System.out.println(response);
+    }
+
+    public static void entriesObserved() {
+        WykopClient client = new WykopClient(PUB, PRV);
+        WykopResponse response = new EntriesObserved(client).call("1");
         System.out.println(response);
     }
 
