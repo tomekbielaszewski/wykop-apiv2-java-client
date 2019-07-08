@@ -105,6 +105,21 @@ public class UsageExamples {
     }
 
     @Test
+    @Ignore
+    public void addEntry() {
+        WykopClient client = new WykopClient(PUB, PRV);
+        new Login(client, ACCOUNT).call();
+        WykopResponse response = EntryAdd.builder()
+                .client(client)
+                .body("testtesttesttesttest")
+                .adult(true)
+                .fileUrl("https://cdn.pixabay.com/photo/2013/07/12/17/47/test-pattern-152459_960_720.png")
+                .build()
+                .call();
+        System.out.println(response);
+    }
+
+    @Test
     public void notThrowingExceptionWhenApiErrorOccurs() {
         WykopClient client = new WykopClient("123456789", "123456789");
         client.setThrowOnApiError(false);
