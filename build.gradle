@@ -21,11 +21,13 @@ repositories {
 
 dependencies {
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.7'
+    compile group: 'commons-logging', name: 'commons-logging', version: '1.2'
     compile group: 'commons-io', name: 'commons-io', version: '2.6'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
 
-    implementation 'org.springframework.boot:spring-boot-starter'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.assertj:assertj-core:3.11.1'
+    testImplementation 'com.jayway.jsonpath:json-path:2.4.0'
 }
