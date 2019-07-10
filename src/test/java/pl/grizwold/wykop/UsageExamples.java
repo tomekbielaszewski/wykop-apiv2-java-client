@@ -3,6 +3,8 @@ package pl.grizwold.wykop;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.TextNode;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.junit.Ignore;
 import org.junit.Test;
 import pl.grizwold.wykop.model.ApiParam;
@@ -27,6 +29,12 @@ public class UsageExamples {
     private static String PUB = "kUhKLnGypc";
     private static String PRV = "vbrbQmciBU";
     private static String ACCOUNT = "KkO9fA3o2uRviR4CVfVn";
+
+    @Test
+    public void customHttpClient() {
+        CloseableHttpClient httpClient = HttpClients.createSystem();
+        WykopClient client = new WykopClient(PUB, PRV, httpClient);
+    }
 
     @Test
     public void definingGlobalParams() {
