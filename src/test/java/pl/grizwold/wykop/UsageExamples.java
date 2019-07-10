@@ -26,9 +26,9 @@ import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
 public class UsageExamples {
-    private static String PUB = "kUhKLnGypc";
-    private static String PRV = "vbrbQmciBU";
-    private static String ACCOUNT = "KkO9fA3o2uRviR4CVfVn";
+    private static String PUB = "g8fGxGTnw9";
+    private static String PRV = "ceeYWvObPc";
+    private static String ACCOUNT = "u0sRR7o4Kw4yX3K5hng8";
 
     @Test
     public void customHttpClient() {
