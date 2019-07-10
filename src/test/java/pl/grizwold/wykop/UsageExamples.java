@@ -131,7 +131,7 @@ public class UsageExamples {
     public void notThrowingExceptionWhenApiErrorOccurs() {
         WykopClient client = new WykopClient("123456789", "123456789");
         client.setThrowOnApiError(false);
-        WykopResponse response = new EntriesObserved(client).call("1");
+        WykopResponse response = new EntryGet(client).call("42485191");
         System.out.println(response);
     }
 
