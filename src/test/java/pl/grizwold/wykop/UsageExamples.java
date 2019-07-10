@@ -113,7 +113,7 @@ public class UsageExamples {
     }
 
     @Test
-    @Ignore
+    @Ignore("Posts an entry on wykop.pl")
     public void addEntry() {
         WykopClient client = new WykopClient(PUB, PRV);
         new Login(client, ACCOUNT).call();
@@ -136,7 +136,7 @@ public class UsageExamples {
     }
 
     @Test
-    @Ignore
+    @Ignore("Long running test case")
     public void massiveEntriesStream() throws ExecutionException, InterruptedException {
         WykopClient client = new WykopClient(PUB, PRV);
         EntriesStream entriesStream = new EntriesStream(client);
