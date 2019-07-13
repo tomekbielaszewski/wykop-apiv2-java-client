@@ -110,15 +110,22 @@ public class WykopClient implements Closeable {
         String json = EntityUtils.toString(content.getEntity());
         JsonNode jsonNode = om.readTree(json);
 
-        WykopResponse.Error error = null;
+        WykopResponse.ApiError error = null;
         if (jsonNode.has("error")) {
             JsonNode errorNode = jsonNode.get("error");
             int code = errorNode.get("code").asInt();
             String message_pl = errorNode.get("message_pl").asText();
-            error = new WykopResponse.Error(code, message_pl);
+            error = new WykopResponse.ApiError(code, message_pl);
             if (throwOnApiError) throw error;
         }
-        return new WykopResponse(json, error);
+
+        String data = null;
+        if (jsonNode.has("data")) {
+            JsonNode dataNode = jsonNode.get("data");
+            data = om.writeValueAsString(dataNode);
+        }
+
+        return new WykopResponse(json, error, data);
     }
 
     @Override
