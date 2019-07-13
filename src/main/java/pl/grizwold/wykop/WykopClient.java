@@ -1,6 +1,5 @@
 package pl.grizwold.wykop;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
 import lombok.SneakyThrows;
@@ -13,6 +12,7 @@ import pl.grizwold.wykop.model.ApiKey;
 import pl.grizwold.wykop.model.ApiParam;
 import pl.grizwold.wykop.model.WykopRequest;
 import pl.grizwold.wykop.model.WykopResponse;
+import pl.grizwold.wykop.model.factory.WykopResponseFactory;
 import pl.grizwold.wykop.resources.WykopResource;
 
 import java.io.Closeable;
@@ -108,24 +108,13 @@ public class WykopClient implements Closeable {
     @SneakyThrows
     private WykopResponse toWykopResponse(CloseableHttpResponse content) {
         String json = EntityUtils.toString(content.getEntity());
-        JsonNode jsonNode = om.readTree(json);
+        WykopResponse response = new WykopResponseFactory().create(json);
 
-        WykopResponse.ApiError error = null;
-        if (jsonNode.has("error")) {
-            JsonNode errorNode = jsonNode.get("error");
-            int code = errorNode.get("code").asInt();
-            String message_pl = errorNode.get("message_pl").asText();
-            error = new WykopResponse.ApiError(code, message_pl);
-            if (throwOnApiError) throw error;
+        if (throwOnApiError && response.getError() != null) {
+            throw response.getError();
         }
 
-        String data = null;
-        if (jsonNode.has("data")) {
-            JsonNode dataNode = jsonNode.get("data");
-            data = om.writeValueAsString(dataNode);
-        }
-
-        return new WykopResponse(json, error, data);
+        return response;
     }
 
     @Override
