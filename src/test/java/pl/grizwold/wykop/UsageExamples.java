@@ -62,14 +62,14 @@ public class UsageExamples {
     @Test
     public void loggingIn() {
         WykopClient client = new WykopClient(PUB, PRV);
-        WykopResponse response = new Login(client, ACCOUNT).call();
+        WykopResponse response = new Login(ACCOUNT).call(client);
         //after this call all subsequent requests will be automatically authorized by this client instance
     }
 
     @Test
     public void loggingIn_modifyingRequestBeforeCall() {
         WykopClient client = new WykopClient(PUB, PRV);
-        WykopRequest request = new Login(client, ACCOUNT).toRequest();
+        WykopRequest request = new Login(ACCOUNT).toRequest();
         request.addNamedParam("data", "full");
         WykopResponse response = client.execute(request);
         System.out.println(response);
@@ -79,36 +79,36 @@ public class UsageExamples {
     @Test
     public void entriesStream() {
         WykopClient client = new WykopClient(PUB, PRV);
-        WykopResponse response = new EntriesStream(client).call("1", "42485191");
+        WykopResponse response = new EntriesStream(1, 42485191L).call(client);
         System.out.println(response);
     }
 
     @Test
     public void entriesHot() {
         WykopClient client = new WykopClient(PUB, PRV);
-        WykopResponse response = new EntriesHot(client).call("1", "24");
+        WykopResponse response = new EntriesHot(1, 24).call(client);
         System.out.println(response);
     }
 
     @Test
     public void entriesActive() {
         WykopClient client = new WykopClient(PUB, PRV);
-        WykopResponse response = new EntriesActive(client).call("1");
+        WykopResponse response = new EntriesActive(1).call(client);
         System.out.println(response);
     }
 
     @Test
     public void entriesObserved() {
         WykopClient client = new WykopClient(PUB, PRV);
-        new Login(client, ACCOUNT).call();
-        WykopResponse response = new EntriesObserved(client).call("1");
+        new Login(ACCOUNT).call(client);
+        WykopResponse response = new EntriesObserved(1).call(client);
         System.out.println(response);
     }
 
     @Test
     public void entryById() {
         WykopClient client = new WykopClient(PUB, PRV);
-        WykopResponse response = new EntryGet(client).call("42485191");
+        WykopResponse response = new EntryGet(42485191L).call(client);
         System.out.println(response);
     }
 
@@ -116,14 +116,13 @@ public class UsageExamples {
     @Ignore("Posts an entry on wykop.pl")
     public void addEntry() {
         WykopClient client = new WykopClient(PUB, PRV);
-        new Login(client, ACCOUNT).call();
+        new Login(ACCOUNT).call(client);
         WykopResponse response = EntryAdd.builder()
-                .client(client)
                 .body("testtesttesttesttest")
                 .adult(true)
                 .fileUrl("https://cdn.pixabay.com/photo/2013/07/12/17/47/test-pattern-152459_960_720.png")
                 .build()
-                .call();
+                .call(client);
         System.out.println(response);
     }
 
@@ -131,7 +130,7 @@ public class UsageExamples {
     public void notThrowingExceptionWhenApiErrorOccurs() {
         WykopClient client = new WykopClient("123456789", "123456789");
         client.setThrowOnApiError(false);
-        WykopResponse response = new EntryGet(client).call("42485191");
+        WykopResponse response = new EntryGet(42485191L).call(client);
         System.out.println(response);
     }
 
@@ -139,13 +138,13 @@ public class UsageExamples {
     @Ignore("Long running test case")
     public void massiveEntriesStream() throws ExecutionException, InterruptedException {
         WykopClient client = new WykopClient(PUB, PRV);
-        EntriesStream entriesStream = new EntriesStream(client);
         ObjectMapper om = new ObjectMapper();
         ForkJoinPool forkJoinPool = new ForkJoinPool(8);
         forkJoinPool.submit(() -> {
             List<Object> ids = IntStream.rangeClosed(1, 250) //pagination starts from 1 on wykop.pl
                     .parallel()
-                    .mapToObj(entriesStream::call)
+                    .mapToObj(page -> EntriesStream.builder().page(page).build())
+                    .map(res -> res.call(client))
                     .map(WykopResponse::getJson)
                     .map(json -> readJsonTree(json, om))
                     .map(node -> node.get("data"))

@@ -13,6 +13,7 @@ import pl.grizwold.wykop.model.ApiKey;
 import pl.grizwold.wykop.model.ApiParam;
 import pl.grizwold.wykop.model.WykopRequest;
 import pl.grizwold.wykop.model.WykopResponse;
+import pl.grizwold.wykop.resources.WykopResource;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -60,6 +61,13 @@ public class WykopClient implements Closeable {
 
         CloseableHttpResponse response = client.execute(request.toRequest());
         return toWykopResponse(response);
+    }
+
+    public WykopResponse execute(@NonNull WykopResource resource) {
+        if (resource.isSecured() && !this.isLoggedIn()) {
+            throw new IllegalStateException("Operation requires logging in!");
+        }
+        return this.execute(resource.toRequest());
     }
 
     public WykopClient set(ApiParam apiParam) {

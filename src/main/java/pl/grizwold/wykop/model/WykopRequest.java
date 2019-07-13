@@ -31,13 +31,28 @@ public class WykopRequest {
         return this;
     }
 
+    public WykopRequest addPostParam(@NonNull String key, @NonNull Object value) {
+        postParams.add(new BasicNameValuePair(key, String.valueOf(value)));
+        return this;
+    }
+
     public WykopRequest addApiParam(@NonNull String value) {
         apiParams.add(value);
         return this;
     }
 
+    public WykopRequest addApiParam(@NonNull Object value) {
+        apiParams.add(String.valueOf(value));
+        return this;
+    }
+
     public WykopRequest addNamedParam(@NonNull String key, @NonNull String value) {
         namedParams.put(key, value);
+        return this;
+    }
+
+    public WykopRequest addNamedParam(@NonNull String key, @NonNull Object value) {
+        namedParams.put(key, String.valueOf(value));
         return this;
     }
 

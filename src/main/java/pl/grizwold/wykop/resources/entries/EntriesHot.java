@@ -1,33 +1,27 @@
 package pl.grizwold.wykop.resources.entries;
 
-import lombok.NonNull;
-import pl.grizwold.wykop.WykopClient;
+import lombok.Builder;
 import pl.grizwold.wykop.model.WykopRequest;
-import pl.grizwold.wykop.model.WykopResponse;
 import pl.grizwold.wykop.resources.WykopResource;
 
 public class EntriesHot extends WykopResource {
     private static final String PAGE = "page";
     private static final String PERIOD = "period";
 
-    public EntriesHot(@NonNull WykopClient client) {
-        super(client);
-    }
+    private final Integer page;
+    private final Integer period;
 
-    public WykopResponse call(int page, int period) {
-        return this.call(String.valueOf(page), String.valueOf(period));
-    }
-
-    public WykopResponse call(String page, String period) {
-        WykopRequest request = this.toRequest()
-                .addNamedParam(PAGE, page)
-                .addNamedParam(PERIOD, period);
-
-        return this.client.execute(request);
+    @Builder
+    public EntriesHot(Integer page, Integer period) {
+        super(NOT_SECURED);
+        this.page = page;
+        this.period = period;
     }
 
     @Override
     public WykopRequest toRequest() {
-        return new WykopRequest(baseUrl + "/Entries/Hot/");
+        return new WykopRequest(baseUrl + "/Entries/Hot/")
+                .addNamedParam(PAGE, page)
+                .addNamedParam(PERIOD, period);
     }
 }
