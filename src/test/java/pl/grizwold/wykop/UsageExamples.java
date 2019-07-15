@@ -113,6 +113,13 @@ public class UsageExamples {
     }
 
     @Test
+    public void commentUpvotersByCommentId() {
+        WykopClient client = new WykopClient(PUB, PRV);
+        WykopResponse response = new CommentUpvoters(150072755L).call(client);
+        System.out.println(response);
+    }
+
+    @Test
     @Ignore("Posts an entry on wykop.pl")
     public void addEntry() {
         WykopClient client = new WykopClient(PUB, PRV);
