@@ -120,6 +120,22 @@ public class UsageExamples {
     }
 
     @Test
+    public void entryVoteUp() {
+        WykopClient client = new WykopClient(PUB, PRV);
+        new Login(ACCOUNT).call(client);
+        WykopResponse response = new EntryVoteUp(42644451L).call(client);
+        System.out.println(response);
+    }
+
+    @Test
+    public void entryVoteRemove() {
+        WykopClient client = new WykopClient(PUB, PRV);
+        new Login(ACCOUNT).call(client);
+        WykopResponse response = new EntryVoteRemove(42644451L).call(client);
+        System.out.println(response);
+    }
+
+    @Test
     @Ignore("Posts an entry on wykop.pl")
     public void addEntry() {
         WykopClient client = new WykopClient(PUB, PRV);
