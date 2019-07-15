@@ -2,6 +2,7 @@ package pl.grizwold.wykop.model;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.Value;
 
 @Value
@@ -11,6 +12,7 @@ public class WykopResponse {
     private String data;
 
     @Getter
+    @ToString
     @EqualsAndHashCode(callSuper = false)
     public static class ApiError extends RuntimeException {
         private int code;
