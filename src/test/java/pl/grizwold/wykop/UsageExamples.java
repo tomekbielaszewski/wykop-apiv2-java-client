@@ -130,7 +130,7 @@ public class UsageExamples {
     @Test
     public void commentUpvotersByCommentId() {
         WykopClient client = new WykopClient(PUB, PRV);
-        WykopResponse response = new CommentUpvoters(150072755L).call(client);
+        WykopResponse response = new EntryCommentUpvoters(150072755L).call(client);
         System.out.println(response);
     }
 
