@@ -8,7 +8,7 @@ public class EntryDelete extends WykopResource {
     public final Long id;
 
     public EntryDelete(@NonNull Long id) {
-        super(NOT_SECURED);
+        super(SECURED);
         this.id = id;
     }
 
