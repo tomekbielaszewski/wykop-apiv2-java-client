@@ -157,6 +157,21 @@ public class UsageExamples {
     }
 
     @Test
+    @Ignore("Edits an entry on wykop.pl")
+    public void editEntry() {
+        WykopClient client = new WykopClient(PUB, PRV);
+        new Login(ACCOUNT).call(client);
+        WykopResponse response = EntryEdit.builder()
+                .id(42485191L)
+                .body("testtesttesttesttest")
+                .adult(true)
+                .fileUrl("https://cdn.pixabay.com/photo/2013/07/12/17/47/test-pattern-152459_960_720.png")
+                .build()
+                .call(client);
+        System.out.println(response);
+    }
+
+    @Test
     public void notThrowingExceptionWhenApiErrorOccurs() {
         WykopClient client = new WykopClient("123456789", "123456789");
         client.setThrowOnApiError(false);
