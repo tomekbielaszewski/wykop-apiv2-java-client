@@ -121,6 +121,13 @@ public class UsageExamples {
     }
 
     @Test
+    public void entryCommentById() {
+        WykopClient client = new WykopClient(PUB, PRV);
+        WykopResponse response = new EntryCommentGet(150072755L).call(client);
+        System.out.println(response);
+    }
+
+    @Test
     public void commentUpvotersByCommentId() {
         WykopClient client = new WykopClient(PUB, PRV);
         WykopResponse response = new CommentUpvoters(150072755L).call(client);
