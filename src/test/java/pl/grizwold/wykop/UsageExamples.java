@@ -113,6 +113,7 @@ public class UsageExamples {
     }
 
     @Test
+    @Ignore("Deletes entry from wykop.pl")
     public void deleteEntry() {
         WykopClient client = new WykopClient(PUB, PRV);
         WykopResponse response = new EntryDelete(42485191L).call(client);
